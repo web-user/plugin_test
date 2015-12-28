@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Plugin Test
-Plugin URI:  
+Plugin URI:  https://github.com/web-user/plugin_test
 Description: Plugin Work Test 
 Author: Sergey
 Version: 1.0
