@@ -31,8 +31,7 @@ function rs_option_page(){
 <div class="wrap">
 	<h2>Options plugin</h2>
 	<p>Settings Plugin &amp; Settings API</p>
-	<p>Add hook new page or posts [test_new_hook]</p>
-		<h2>Application for inventory</h2>
+	<p>Add hook new page or posts [test_checkout_list_options]</p>
 
 </div>
 
@@ -69,3 +68,37 @@ function nacin_register_slideshows_post_type() {
         ) );
 }
 add_action( 'init', 'nacin_register_slideshows_post_type' );
+
+
+$sh_cod_options = 'test_checkout_list_options';
+
+add_shortcode( $sh_cod_options, 'rs_option_page_new' );
+
+function rs_option_page_new(){
+
+	 $slider = new WP_Query(array('post_type' => 'slideshow', 'order' => 'ASC'));
+
+	if ( $slider->have_posts() ) : ?>
+			<div class="slider margin-top">
+				<div class="flexslider">
+					<ul class="slides">
+
+						<?php while ( $slider->have_posts() ) : $slider->the_post(); ?>
+							<li>
+								<div class="slide-content">
+									<?php the_content(); ?>
+								</div>
+								<?php the_post_thumbnail(); ?>
+							</li>
+						<?php endwhile; ?>
+					</ul>
+				</div>
+			</div>
+	<?php else: ?>
+		<div><h2>This plase slider</h2></div>
+	<?php endif; 
+
+
+
+
+}
