@@ -60,6 +60,9 @@ function nacin_register_slideshows_post_type() {
                 'labels' => array(
                         'name' => 'Slideshows',
                         'singular_name' => 'Slideshow',
+                        'add_new'       => __( 'Add New', 'Slideshows', 'rs' ),
+                        'add_new_item'       => __( 'Add Slideshows', 'rs' ),
+                        'edit_item'     => __( 'Edit Slideshows', 'your-plugin-textdomain' ),
                 ),
                 'public' => true,
                 'show_ui' => true,
@@ -68,6 +71,25 @@ function nacin_register_slideshows_post_type() {
         ) );
 }
 add_action( 'init', 'nacin_register_slideshows_post_type' );
+
+// Добавляем фильтр, который изменит сообщение при публикации при изменении типа записи Book
+add_filter('post_updated_messages', 'slideshow_updated_messages');
+function slideshow_updated_messages( $messages ) {
+  global $post, $post_ID;
+
+  $messages['slideshow'] = array(
+	0 => '', // Не используется. Сообщения используются с индекса 1.
+	1 => sprintf( 'Slideshow Update. Add hook new page or posts <span style="color: red;font-weight: 600;">[test_checkout_list_options]</span> ', esc_url( get_permalink($post_ID) ) ),
+	3 => sprintf( 'Record Slideshow published. Add hook new page or posts <span style="color: red;font-weight: 600;">[test_checkout_list_options]</span> ', esc_url( get_permalink($post_ID) ) ),
+	4 => 'Запись Book сохранена.',
+	6 => sprintf( 'Record Slideshow is planned for: <strong>%1$s</strong>. Add hook new page or posts <span style="color: red;font-weight: 600;">[test_checkout_list_options]</span>',
+	  // Как форматировать даты в PHP можно посмотреть тут: http://php.net/date
+	  date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+
+  );
+
+  return $messages;
+}
 
 
 $sh_cod_options = 'test_checkout_list_options';
@@ -98,7 +120,74 @@ function rs_option_page_new(){
 		<div><h2>This plase slider</h2></div>
 	<?php endif; 
 
+}
 
 
+
+
+function nacin_register_section_post_type() {
+        register_post_type( 'section', array(
+                'labels' => array(
+                        'name' => 'Section',
+                        'singular_name' => 'Section',
+                        'add_new'       => __( 'Add New', 'Section', 'rs' ),
+                        'add_new_item'       => __( 'Add Section', 'rs' ),
+                        'edit_item'     => __( 'Edit Slideshows', 'your-plugin-textdomain' ),
+                ),
+                'public' => true,
+                'show_ui' => true,
+                'show_in_menu' => 'rs_options_plagin',
+                'supports' => array( 'title' ,'thumbnail', 'editor' ),
+        ) );
+}
+add_action( 'init', 'nacin_register_section_post_type' );
+
+// Добавляем фильтр, который изменит сообщение при публикации при изменении типа записи Book
+add_filter('post_updated_messages', 'section_updated_messages');
+function section_updated_messages( $messages ) {
+  global $post, $post_ID;
+
+  $messages['section'] = array(
+	0 => '', // Не используется. Сообщения используются с индекса 1.
+	1 => sprintf( 'Section Update. Add hook new page or posts <span style="color: red;font-weight: 600;">[test_checkout_list_options]</span> ', esc_url( get_permalink($post_ID) ) ),
+	3 => sprintf( 'Record Section published. Add hook new page or posts <span style="color: red;font-weight: 600;">[test_checkout_list_options]</span> ', esc_url( get_permalink($post_ID) ) ),
+	4 => 'Запись Book сохранена.',
+	6 => sprintf( 'Record Section is planned for: <strong>%1$s</strong>. Add hook new page or posts <span style="color: red;font-weight: 600;">[test_checkout_list_options]</span>',
+	  // Как форматировать даты в PHP можно посмотреть тут: http://php.net/date
+	  date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+
+  );
+
+  return $messages;
+}
+
+
+$sh_cod_section = 'test_checkout_list_options';
+
+add_shortcode( $sh_cod_section, 'rs_section_page_new' );
+
+function rs_section_page_new(){
+
+	 $slider = new WP_Query(array('post_type' => 'section', 'order' => 'ASC'));
+
+	if ( $slider->have_posts() ) : ?>
+			<div class="slider margin-top">
+				<div class="flexslider">
+					<ul class="slides">
+
+						<?php while ( $slider->have_posts() ) : $slider->the_post(); ?>
+							<li>
+								<div class="slide-content">
+									<?php the_content(); ?>
+								</div>
+								<?php the_post_thumbnail(); ?>
+							</li>
+						<?php endwhile; ?>
+					</ul>
+				</div>
+			</div>
+	<?php else: ?>
+		<div><h2>This plase slider</h2></div>
+	<?php endif; 
 
 }
