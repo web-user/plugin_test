@@ -97,14 +97,11 @@ function rs_option_page_new(){
 		<ul class="bxslider">
 			<?php while ( $slider->have_posts() ) : $slider->the_post(); ?>
 				<li>
-					<div class="slide-content">
-						<?php the_content(); ?>
-					</div>
 					<?php
 						$thumb = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), 'full' );
 						$url = $thumb['0'];
 					?>
-					<img src="<?php echo $url; ?>">
+					<img src="<?php echo $url; ?>" title="<?php the_content(); ?>">
 				</li>
 			<?php endwhile; ?>
 		</ul>
